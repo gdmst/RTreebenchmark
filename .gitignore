@@ -3,3 +3,7 @@ libspatialindexgit add README.md
 
 # Dataset
 datasets/T_drive
+
+# system file
+.DS_Store
+.ipynb_checkpoints
