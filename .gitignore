@@ -2,7 +2,7 @@
 libspatialindexgit add README.md
 
 # Dataset
-datasets/T_drive
+datasets
 
 # system file
 .DS_Store
