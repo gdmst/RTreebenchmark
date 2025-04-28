@@ -189,8 +189,9 @@ void insert_all () {
 
 void insertion_experiment (long chunk_size) {
     uint64_t start_time, end_time, elapsed_time = 0;
+    uint64_t start_time_del, end_time_del, elapsed_time_del = 0;
 
-    long start_pos = 0, end_pos = chunk_size - 1, sum = 0, count = 0; 
+    long start_pos = 0, end_pos = chunk_size - 1, sum = 0, sum_del = 0, count = 0; 
 
 
     while(end_pos <= DATASET_SIZE - 1) {
@@ -212,14 +213,36 @@ void insertion_experiment (long chunk_size) {
 
         sum += elapsed_time;
 
+
+        // delete from tree 
+
+        start_time_del = std::chrono::duration_cast<std::chrono::microseconds>
+        (std::chrono::system_clock::now().time_since_epoch())
+        .count();
+    
+    
+        for (int id = start_pos ; id <= end_pos ;  id++){
+
+            idx->index().deleteData(*point_list[id], id); 
+        }
+    
+        end_time_del = std::chrono::duration_cast<std::chrono::microseconds>
+        (std::chrono::system_clock::now().time_since_epoch())
+        .count();
+
+        elapsed_time_del = end_time_del - start_time_del;
+
+        sum_del += elapsed_time_del;
+
         start_pos += chunk_size;
         end_pos += chunk_size;
         count += 1;
     }
 
     double average_elapsed = (double)sum/count;
+    double average_elapsed_del = (double)sum_del/count;
 
-    printf("%ld, %.2f\n", chunk_size, average_elapsed);  
+    printf("%ld, %.2f, %.2f\n", chunk_size, average_elapsed, average_elapsed_del);  
 }
 
 
