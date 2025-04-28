@@ -21,29 +21,54 @@ using namespace std;
 // global
 
 // fun_definition
-vector <SpatialIndex::IShape*> point_list ;
+vector <SpatialIndex::Point*> point_list ;
 // long DATASET_SIZE = 17622266;
-long DATASET_SIZE = 500001;
+long DATASET_SIZE = 6000;
 IStorageManager* mem_storege = StorageManager::createNewMemoryStorageManager();
 
 Index* idx;
 
 void load_data(string file_path);
 
-void set_up_Rtree(RTIndexVariant variant);
+void set_up_Rtree(int variant);
 
 void insert_all (); 
 
-void insertion_experiment ();
+void insertion_experiment (long chunk_size);
+void deletion_experiment (long chunk_size);
+void pointquery_experiment (long chunk_size) ;
 
 int main (int argc, char* argv[]) {
     load_data("datasets/t_drive_merged_filtered_shuffled.csv");
-    set_up_Rtree(RT_Linear); //0 = linear, 1 = quardatic, 2 = star
-    insertion_experiment();
+    set_up_Rtree(atoi(argv[2])); //0 = linear, 1 = quardatic, 2 = star
+
+    switch (atoi(argv[1])) {
+        case 1:
+            // Insertion
+            insertion_experiment(atoi(argv[3]));
+            break;
+        case 2:
+            // Deletion
+            insert_all();
+            deletion_experiment(atoi(argv[3]));
+            break;
+        case 3:
+            // Point Query
+            break;
+        case 4:
+            // Range Query 
+            break;
+        default:
+            cout << "Please choose between 1-4" << endl;
+            break;
+    }
+
+    
+    
 }
 
 
-void set_up_Rtree(RTIndexVariant variant) {
+void set_up_Rtree(int variant) {
     Tools::PropertySet* ps = GetDefaults();
 	Tools::Variant var ;
 	
@@ -109,7 +134,7 @@ void load_data(string file_path) { // preprocessing
 
         double p[] = {long_longtitude,long_latitude,long_timestamp};
 
-        SpatialIndex::IShape* r = new SpatialIndex::Point(p, 3);
+        SpatialIndex::Point* r = new SpatialIndex::Point(p, 3);
 
         point_list.push_back(r);
 
@@ -128,10 +153,11 @@ void insert_all () {
         idx->index().insertData(0, nullptr,*point_list[id], id); // if error it will be throw 
     }
 
+    cout<< "insert complete" <<endl;
 }
 
 
-void insertion_experiment () {
+void insertion_experiment (long chunk_size) {
     long chunk_size = 1000;
     uint64_t start_time, end_time, elapsed_time = 0;
 
@@ -171,9 +197,109 @@ void insertion_experiment () {
             end_pos += chunk_size;
             count += 1;
         }
-        long average_elapsed = sum/count;
+        double average_elapsed = (double)sum/count;
 
         cout << average_elapsed << endl;
+
+    }
+}
+
+
+void deletion_experiment (long chunk_size) {
+
+    uint64_t start_time, end_time, elapsed_time = 0;
+
+    cout << "chunk size,average elapsed time" << endl;
+
+    // for(int i = chunk_size; i <= DATASET_SIZE; i*=2 ) {
+    long start_pos = 0, end_pos = chunk_size - 1, sum = 0, count = 0; 
+
+    cout<< chunk_size << ", ";
+
+    while(end_pos <= DATASET_SIZE - 1) {
+
+        // cout << "end pos" << end_pos << endl;
+        
+        start_time = std::chrono::duration_cast<std::chrono::microseconds>
+        (std::chrono::system_clock::now().time_since_epoch())
+        .count();
+    
+    
+        for (int id = start_pos ; id <= end_pos ;  id++){
+            //  cout<< id <<endl;
+            idx->index().deleteData(*point_list[id], id); // if error it will be throw 
+        }
+    
+        end_time = std::chrono::duration_cast<std::chrono::microseconds>
+        (std::chrono::system_clock::now().time_since_epoch())
+        .count();
+
+        // capture result
+        elapsed_time = end_time - start_time;
+
+        cout << elapsed_time << ", ";
+
+        sum += elapsed_time;
+
+        start_pos += chunk_size;
+        end_pos += chunk_size;
+        count += 1;
+    }
+    double average_elapsed = sum/count;
+
+    cout << average_elapsed << endl;
+
+    // }
+}
+
+
+void pointquery_experiment (long chunk_size) {
+    long chunk_size = 1000;
+    uint64_t start_time, end_time, elapsed_time = 0;
+
+    cout << "chunk size,average elapsed time" << endl;
+
+    for(int i = chunk_size; i <= DATASET_SIZE; i*=2 ) {
+        long start_pos = 0, end_pos = i - 1, sum = 0, count = 0; 
+
+        cout<< i << ", ";
+
+        while(end_pos <= DATASET_SIZE - 1) {
+
+            // cout << "end pos" << end_pos << endl;
+            
+            start_time = std::chrono::duration_cast<std::chrono::microseconds>
+            (std::chrono::system_clock::now().time_since_epoch())
+            .count();
+        
+            ObjVisitor* visitor = new ObjVisitor;
+            for (int id = start_pos ; id <= end_pos ;  id++){
+                //  cout<< id <<endl;
+                idx->index().pointLocationQuery(*point_list[id], *visitor); // if error it will be throw 
+            }
+        
+            end_time = std::chrono::duration_cast<std::chrono::microseconds>
+            (std::chrono::system_clock::now().time_since_epoch())
+            .count();
+
+            // capture result
+            elapsed_time = end_time - start_time;
+
+            // cout << elapsed_time << ", ";
+
+            sum += elapsed_time;
+
+            start_pos += chunk_size;
+            end_pos += chunk_size;
+            count += 1;
+            int nResultCount = visitor->GetResultCount();
+
+            delete visitor;
+        }
+        double average_elapsed = (double)sum/count;
+
+        cout << average_elapsed << endl;
+
 
     }
 }
