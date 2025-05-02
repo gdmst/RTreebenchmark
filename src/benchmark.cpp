@@ -22,8 +22,8 @@ using namespace std;
 
 // fun_definition
 vector <SpatialIndex::Point*> point_list ;
-// long DATASET_SIZE = 17622266;
-long DATASET_SIZE = 6000;
+long DATASET_SIZE = 17622266;
+// long DATASET_SIZE = 6000;
 double x_min, y_min, z_min, x_max, y_max, z_max;
 
 IStorageManager* mem_storege = StorageManager::createNewMemoryStorageManager();
@@ -69,7 +69,8 @@ int main (int argc, char* argv[]) {
             break;
     }
 
-    
+    delete idx;
+    // delete[] &point_list;
     
 }
 
@@ -212,27 +213,6 @@ void insertion_experiment (long chunk_size) {
         elapsed_time = end_time - start_time;
 
         sum += elapsed_time;
-
-
-        // delete from tree 
-
-        start_time_del = std::chrono::duration_cast<std::chrono::microseconds>
-        (std::chrono::system_clock::now().time_since_epoch())
-        .count();
-    
-    
-        for (int id = start_pos ; id <= end_pos ;  id++){
-
-            idx->index().deleteData(*point_list[id], id); 
-        }
-    
-        end_time_del = std::chrono::duration_cast<std::chrono::microseconds>
-        (std::chrono::system_clock::now().time_since_epoch())
-        .count();
-
-        elapsed_time_del = end_time_del - start_time_del;
-
-        sum_del += elapsed_time_del;
 
         start_pos += chunk_size;
         end_pos += chunk_size;
@@ -385,7 +365,7 @@ void rangequery_experiment (int query_size) {
 
                 printf("%.6f, %.6f, %.2f,", x_start, y_start, z_start);
                 printf("%.6f, %.6f, %.2f,", x_end, y_end, z_end);
-                printf("%d, %d, %llu\n", query_size, nResultCount, elapsed_time);  
+                printf("%d, %d, %lu\n", query_size, nResultCount, elapsed_time);  
 
                 x_start += x_stride;
                 x_end += x_stride;
@@ -402,5 +382,5 @@ void rangequery_experiment (int query_size) {
 }
 
 
-// export DYLD_LIBRARY_PATH=/Users/uraiwanjansong/Research/Spatiotemporal_index/lib:$DYLD_LIBRARY_PATH
-// g++  src/test_insertion.cpp -L/Users/uraiwanjansong/Research/Spatiotemporal_index/lib -lspatialindex -I/Users/uraiwanjansong/Research/Spatiotemporal_index/include -o out/test/test_insertion --std=c++11
+// export LD_LIBRARY_PATH=/home/mi_lab/research/RTreebenchmark/lib:$LD_LIBRARY_PATH
+// g++  src/benchmark.cpp -L/home/mi_lab/research/RTreebenchmark/lib -lspatialindex -I/home/mi_lab/research/RTreebenchmark/include -o out/benchmark --std=c++11
