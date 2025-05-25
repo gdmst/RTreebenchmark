@@ -1,0 +1,32 @@
+insert Quadratic
+chunk size, average elapsed time
+24223697records have been loaded.
+1000, 3965.76, 8680.73
+24223697records have been loaded.
+2000, 8647.20, 18190.66
+24223697records have been loaded.
+4000, 19210.84, 40520.70
+24223697records have been loaded.
+8000, 44239.42, 97930.79
+24223697records have been loaded.
+16000, 94074.72, 217867.09
+24223697records have been loaded.
+32000, 195937.55, 529398.40
+24223697records have been loaded.
+64000, 421891.63, 1283694.38
+24223697records have been loaded.
+128000, 851354.40, 3045865.90
+24223697records have been loaded.
+256000, 1782340.93, 6740352.90
+24223697records have been loaded.
+512000, 3890215.68, 15521299.26
+24223697records have been loaded.
+1024000, 8925721.17, 37692058.96
+24223697records have been loaded.
+2048000, 16598943.55, 104504760.73
+24223697records have been loaded.
+4096000, 35301256.00, 258289110.00
+24223697records have been loaded.
+8192000, 72167314.00, 598639368.50
+24223697records have been loaded.
+16384000, 155220045.00, 1233143306.00

@@ -1,0 +1,32 @@
+insert Linear
+chunk size, average elapsed time
+24223697records have been loaded.
+1000, 1890.01, 6479.21
+24223697records have been loaded.
+2000, 4320.75, 15608.81
+24223697records have been loaded.
+4000, 10457.89, 39379.97
+24223697records have been loaded.
+8000, 25644.38, 100652.77
+24223697records have been loaded.
+16000, 56925.09, 246051.14
+24223697records have been loaded.
+32000, 120289.04, 605302.28
+24223697records have been loaded.
+64000, 250709.16, 1446225.00
+24223697records have been loaded.
+128000, 524198.61, 3386208.10
+24223697records have been loaded.
+256000, 1158359.51, 7764526.29
+24223697records have been loaded.
+512000, 2652203.21, 18941389.77
+24223697records have been loaded.
+1024000, 5648348.48, 49546125.13
+24223697records have been loaded.
+2048000, 12024883.73, 137597341.64
+24223697records have been loaded.
+4096000, 24459524.20, 325814054.00
+24223697records have been loaded.
+8192000, 52021283.00, 797394962.50
+24223697records have been loaded.
+16384000, 116548171.00, 1779218218.00
